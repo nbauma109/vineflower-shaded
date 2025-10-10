@@ -23,6 +23,9 @@
 									<include>org.vineflower:vineflower</include>
 								</includes>
 							</artifactSet>
+							<!-- build a relocated sources jar too -->
+							<createSourcesJar>true</createSourcesJar>
+							<shadeSourcesContent>true</shadeSourcesContent>
 							<relocations>
 								<relocation>
 									<pattern>org.jetbrains</pattern>
