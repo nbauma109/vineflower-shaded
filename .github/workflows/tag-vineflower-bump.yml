@@ -1,0 +1,65 @@
+name: Tag Vineflower Bump
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
+
+jobs:
+  tag-vineflower:
+    if: github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]' && contains(github.event.pull_request.title, 'org.vineflower:vineflower')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Extract new Vineflower version
+        id: extract_version
+        run: |
+          # Extract version number from PR title:
+          # Example: "Bump org.vineflower:vineflower from 1.11.1 to 1.11.2"
+          title="${{ github.event.pull_request.title }}"
+          new_version=$(echo "$title" | sed -n 's/.*to \([0-9.]*\)$/\1/p')
+
+          if [ -z "$new_version" ]; then
+            echo "Failed to extract version from PR title: $title"
+            exit 1
+          fi
+
+          echo "new_version=$new_version" >> "$GITHUB_OUTPUT"
+
+      - name: Update project version
+        run: |
+          new_version="${{ steps.extract_version.outputs.new_version }}"
+
+          mvn versions:set -DnewVersion="$new_version" -DgenerateBackupPoms=false
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pom.xml
+          git commit -m "Set project version to $new_version"
+
+      - name: Push version commit
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          git push "https://${{ github.actor }}:${PAT_TOKEN}@github.com/${{ github.repository }}.git" HEAD:master
+
+      - name: Create and push tag
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          new_version="${{ steps.extract_version.outputs.new_version }}"
+          git tag "$new_version"
+          git push "https://${{ github.actor }}:${PAT_TOKEN}@github.com/${{ github.repository }}.git" "$new_version"
