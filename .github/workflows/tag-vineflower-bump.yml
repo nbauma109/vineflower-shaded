@@ -27,7 +27,7 @@ jobs:
       - name: Extract repository owner
         id: repo_owner
         run: |
-          owner=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+          owner=$(echo "${GITHUB_REPOSITORY}" | cut -d'/' -f1)
           echo "owner=$owner" >> "$GITHUB_OUTPUT"
 
       - name: Extract new Vineflower version
@@ -60,14 +60,18 @@ jobs:
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
           REPO_OWNER: ${{ steps.repo_owner.outputs.owner }}
+          REPOSITORY: ${{ github.repository }}
         run: |
-          git push "https://${REPO_OWNER}:${PAT_TOKEN}@github.com/${{ github.repository }}.git" HEAD:master
+          git remote set-url origin "https://${REPO_OWNER}:${PAT_TOKEN}@github.com/${REPOSITORY}.git"
+          git push origin HEAD:master
 
       - name: Create and push tag
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
           REPO_OWNER: ${{ steps.repo_owner.outputs.owner }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           new_version="${{ steps.extract_version.outputs.new_version }}"
           git tag "$new_version"
-          git push "https://${REPO_OWNER}:${PAT_TOKEN}@github.com/${{ github.repository }}.git" "$new_version"
+          git remote set-url origin "https://${REPO_OWNER}:${PAT_TOKEN}@github.com/${REPOSITORY}.git"
+          git push origin "$new_version"
