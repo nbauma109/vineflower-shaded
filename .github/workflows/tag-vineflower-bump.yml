@@ -9,7 +9,7 @@ on:
 
 jobs:
   tag-vineflower:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, 'Bump org.vineflower:vineflower from')
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, 'Bump org.vineflower:vineflower')
     runs-on: ubuntu-latest
 
     steps:
@@ -24,11 +24,15 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Extract repository owner
+        id: repo_owner
+        run: |
+          owner=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+          echo "owner=$owner" >> "$GITHUB_OUTPUT"
+
       - name: Extract new Vineflower version
         id: extract_version
         run: |
-          # Extract version number from PR title:
-          # Example: "Bump org.vineflower:vineflower from 1.11.1 to 1.11.2"
           title="${{ github.event.pull_request.title }}"
           new_version=$(echo "$title" | sed -n 's/.*to \([0-9.]*\)$/\1/p')
 
@@ -40,26 +44,30 @@ jobs:
           echo "new_version=$new_version" >> "$GITHUB_OUTPUT"
 
       - name: Update project version
+        env:
+          REPO_OWNER: ${{ steps.repo_owner.outputs.owner }}
         run: |
           new_version="${{ steps.extract_version.outputs.new_version }}"
+          mvn --no-transfer-progress versions:set -DnewVersion="$new_version" -DgenerateBackupPoms=false
 
-          mvn versions:set -DnewVersion="$new_version" -DgenerateBackupPoms=false
+          git config user.name "$REPO_OWNER"
+          git config user.email "${REPO_OWNER}@users.noreply.github.com"
 
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add pom.xml
           git commit -m "Set project version to $new_version"
 
       - name: Push version commit
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          REPO_OWNER: ${{ steps.repo_owner.outputs.owner }}
         run: |
-          git push "https://${{ github.actor }}:${PAT_TOKEN}@github.com/${{ github.repository }}.git" HEAD:master
+          git push "https://${REPO_OWNER}:${PAT_TOKEN}@github.com/${{ github.repository }}.git" HEAD:master
 
       - name: Create and push tag
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          REPO_OWNER: ${{ steps.repo_owner.outputs.owner }}
         run: |
           new_version="${{ steps.extract_version.outputs.new_version }}"
           git tag "$new_version"
-          git push "https://${{ github.actor }}:${PAT_TOKEN}@github.com/${{ github.repository }}.git" "$new_version"
+          git push "https://${REPO_OWNER}:${PAT_TOKEN}@github.com/${{ github.repository }}.git" "$new_version"
