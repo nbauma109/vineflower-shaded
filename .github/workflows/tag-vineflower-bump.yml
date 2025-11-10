@@ -9,7 +9,7 @@ on:
 
 jobs:
   tag-vineflower:
-    if: github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]' && contains(github.event.pull_request.title, 'org.vineflower:vineflower')
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, 'Bump org.vineflower:vineflower from')
     runs-on: ubuntu-latest
 
     steps:
