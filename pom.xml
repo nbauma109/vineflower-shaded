@@ -5,7 +5,7 @@
 
   <groupId>io.github.nbauma109</groupId>
   <artifactId>vineflower</artifactId>
-  <version>1.11.1</version>
+  <version>1.11.2</version>
 
   <name>Vineflower shaded</name>
   <description>Shaded version of Vineflower decompiler relocating package org.jetbrains.java.decompiler to org.vineflower.java.decompiler</description>
