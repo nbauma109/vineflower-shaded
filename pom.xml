@@ -15,6 +15,7 @@
     <license>
       <name>Apache License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
     </license>
   </licenses>
 
@@ -25,6 +26,19 @@
       <url>https://github.com/nbauma109</url>
     </developer>
   </developers>
+
+  <scm>
+    <url>https://github.com/nbauma109/vineflower-shaded</url>
+    <connection>scm:git:https://github.com/nbauma109/vineflower-shaded.git</connection>
+    <developerConnection>scm:git:https://github.com/nbauma109/vineflower-shaded.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
 
   <build>
     <plugins>
