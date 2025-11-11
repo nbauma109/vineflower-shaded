@@ -1,8 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.nbauma109/vineflower.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.nbauma109/vineflower)
 [![Github Release](https://github.com/nbauma109/vineflower-shaded/actions/workflows/release.yml/badge.svg)](https://github.com/nbauma109/vineflower-shaded/actions/workflows/release.yml)
-[![Dependabot Updates](https://github.com/nbauma109/vineflower-shaded/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/nbauma109/vineflower-shaded/actions/workflows/dependabot/dependabot-updates)
-[![Publish to Maven Central](https://github.com/nbauma109/vineflower-shaded/actions/workflows/publish.yml/badge.svg)](https://github.com/nbauma109/vineflower-shaded/actions/workflows/publish.yml)
-[![Tag Vineflower Bump](https://github.com/nbauma109/vineflower-shaded/actions/workflows/tag-vineflower-bump.yml/badge.svg)](https://github.com/nbauma109/vineflower-shaded/actions/workflows/tag-vineflower-bump.yml)
 
 Shaded version of [Vineflower](https://github.com/Vineflower/vineflower) decompiler relocating package `org.jetbrains.java.decompiler` to `org.vineflower.java.decompiler`.
 
