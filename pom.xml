@@ -83,13 +83,13 @@
         </executions>
       </plugin>
 
-      <!-- Unpack our own shaded sources jar into target/shaded-sources -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.9.0</version>
         <executions>
           <execution>
+            <!-- Unpack our own shaded sources jar into target/shaded-sources -->
             <id>unpack-shaded-sources</id>
             <phase>package</phase>
             <goals>
@@ -104,6 +104,25 @@
                   <type>jar</type>
                   <classifier>sources</classifier>
                   <outputDirectory>${project.build.directory}/shaded-sources</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <!-- Unpack the real Vineflower jar for access to the built-in plugins -->
+          <execution>
+            <id>unpack-vineflower</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.vineflower</groupId>
+                  <artifactId>vineflower</artifactId>
+                  <version>${project.version}</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}/vineflower-files</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -137,6 +156,31 @@
               <doclint>none</doclint>
               <failOnError>false</failOnError>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Extract the plugin classes into the main output -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <?m2e execute onConfiguration,onIncremental?>
+            <id>extract-plugins</id>
+            <phase>process-classes</phase>
+            <configuration>
+              <target>
+                <unzip dest="${project.build.outputDirectory}">
+                  <fileset dir="${project.build.directory}/vineflower-files/META-INF/plugins">
+                    <include name="*.jar"/>
+                  </fileset>
+                </unzip>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
