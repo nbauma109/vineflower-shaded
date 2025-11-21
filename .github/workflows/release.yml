@@ -29,5 +29,5 @@ jobs:
           repo_token: "${{ secrets.PAT_TOKEN }}"
           prerelease: false
           files: |
-            **/*.jar
+            **/vineflower-*.jar
 
