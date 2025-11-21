@@ -5,7 +5,7 @@
 
   <groupId>io.github.nbauma109</groupId>
   <artifactId>vineflower</artifactId>
-  <version>1.11.2</version>
+  <version>1.11.2+1</version>
 
   <name>Vineflower shaded</name>
   <description>Shaded version of Vineflower decompiler relocating package org.jetbrains.java.decompiler to org.vineflower.java.decompiler</description>
@@ -38,6 +38,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
+    <vineflower.version>1.11.2</vineflower.version>
   </properties>
 
   <build>
@@ -120,7 +121,7 @@
                 <artifactItem>
                   <groupId>org.vineflower</groupId>
                   <artifactId>vineflower</artifactId>
-                  <version>${project.version}</version>
+                  <version>${vineflower.version}</version>
                   <type>jar</type>
                   <outputDirectory>${project.build.directory}/vineflower-files</outputDirectory>
                 </artifactItem>
@@ -217,7 +218,7 @@
     <dependency>
       <groupId>org.vineflower</groupId>
       <artifactId>vineflower</artifactId>
-      <version>1.11.2</version>
+      <version>${vineflower.version}</version>
     </dependency>
 
     <!-- Ensure JetBrains annotations are present for javadoc, and left unshaded -->
